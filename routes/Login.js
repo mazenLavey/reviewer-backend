@@ -24,13 +24,11 @@ router.post('/', async (req, res) => {
                 if (error) throw error;
 
                 res.json({
-                    success: true,
-                    data: {
-                        message: "Welcome back!",
-                        token, userId: userDoc._id,
-                        userName: userDoc.userName,
-                        userEmail
-                    }
+                    message: "Welcome back!",
+                    token, 
+                    userId: userDoc._id,
+                    userName: userDoc.userName,
+                    userEmail
                 });
             })
         }

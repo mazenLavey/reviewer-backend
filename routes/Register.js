@@ -14,10 +14,11 @@ router.post('/', async (req, res) => {
             userPassword: bcrypt.hashSync(userPassword, salt)
         })
         
-        res.json({
-            data: userDoc,
-            success: true,
-        });
+        res.json({data: {
+            userId: userDoc._id,
+            userName: userDoc.userName,
+            userEmail: userDoc.userEmail,
+        }});
 
     } catch (error) {
         res.status(500).json({

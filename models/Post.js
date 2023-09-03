@@ -2,18 +2,25 @@ import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
 
+const CommentSchema = new Schema({
+    content: { type: String, required: true },
+    authorId: { type: Schema.Types.ObjectId, ref: 'User' },
+}, {
+    timestamps: true,
+});
+
 const PostSchema = new Schema({
     postTitle: { type: String, required: true },
     postSummary: { type: String, required: true },
     postContent: { type: String, required: true },
     mediaFiles: [{ type: String, required: true }],
     author: { type: Schema.Types.ObjectId, ref: 'User' },
-    likes: { type: Number },
-    comments: { type: Array }
+    likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    comments: [CommentSchema],
 }, {
     timestamps: true,
 });
 
-const PostModel = model('Post', PostSchema);
+const Post = model('Post', PostSchema);
 
-export default PostModel;
+export default Post;
