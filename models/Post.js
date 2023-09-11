@@ -17,6 +17,9 @@ const PostSchema = new Schema({
     author: { type: Schema.Types.ObjectId, ref: 'User' },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     comments: [CommentSchema],
+    postGroup: { type: String, required: true },
+    postTags: { type: String, required: true },
+    postRate: { type: String, required: true },
 }, {
     timestamps: true,
 });
