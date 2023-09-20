@@ -15,7 +15,7 @@ router.post('/', upload.array('mediaFiles'), async (req, res) => {
             postTags,
             postRate,
         } = req.body;
-        
+
         const { userId } = JSON.parse(req.cookies._auth_state);
         const uploadedFiles = [];
 
@@ -73,7 +73,7 @@ router.get('/user_posts', async (req, res) => {
     try {
         const { userId } = JSON.parse(req.cookies._auth_state);
 
-        const userPosts = await Post.find({ userId });
+        const userPosts = await Post.find({ author: userId });
 
         res.json({
             success: true,
@@ -92,11 +92,37 @@ router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
 
-        const userPosts = await Post.findById(id).populate('author', ['userName']);
+        const userPosts = await Post.findById(id)
+            .populate('author', ['userName'])
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'userName',
+                },
+            });
 
         res.json({
             success: true,
             data: userPosts
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+})
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const userPost = await Post.findByIdAndRemove(id);
+
+        res.json({
+            success: true,
         });
 
     } catch (error) {
@@ -117,14 +143,14 @@ router.put('/comments', async (req, res) => {
 
         const newComment = {
             content,
-            authorId: userId,
+            author: userId,
         }
 
         const updatedPost = await Post.findByIdAndUpdate(
             postId,
             { $push: { comments: newComment } },
             { new: true }
-        ).populate('comments.authorId', ['userName']);
+        ).populate('comments.author', ['userName']);
 
         if (!updatedPost) {
             return res.status(404).json({
@@ -149,18 +175,13 @@ router.put('/comments', async (req, res) => {
 
 router.delete('/comments/:commentId', async (req, res) => {
     try {
-        // userId
-        const { userId } = JSON.parse(req.cookies._auth_state);
-
-        // comment
         const { commentId } = req.params;
 
-        // Find the post associated with the comment
         const post = await Post.findOneAndUpdate(
             { 'comments._id': commentId },
             { $pull: { comments: { _id: commentId } } },
             { new: true }
-        ).populate('comments.authorId', ['userName']);
+        );
 
         if (!post) {
             return res.status(404).json({
@@ -171,7 +192,6 @@ router.delete('/comments/:commentId', async (req, res) => {
 
         res.json({
             success: true,
-            data: post,
         });
 
 

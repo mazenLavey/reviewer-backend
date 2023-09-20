@@ -5,19 +5,34 @@ import registerRoute from './routes/Register';
 import loginRoute from './routes/Login';
 import PostRoute from './routes/Post';
 import cookieParser from 'cookie-parser';
+import { Server } from "socket.io";
+import { createServer } from 'http';
+import dotenv from 'dotenv';
 
 const PORT = 4000;
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "http://localhost:3000",
+        credentials: true,
+    }
+});
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
 
-mongoose.connect("mongodb+srv://mazenfp:JipRIoBf2A7hu0bq@reviewer.qwcbmxs.mongodb.net/")
+mongoose.connect(process.env.MONGO_URL);
 
-app.use("/api/register", registerRoute)
-app.use("/api/login", loginRoute)
-app.use("/api/post", PostRoute)
+io.on('connection', (socket) => {
+    socket.on("send_like", (val)=>{
+        socket.broadcast.emit("receive_like", {data: "hghghg"})
+    });
+});
 
+app.use("/api/register", registerRoute);
+app.use("/api/login", loginRoute);
+app.use("/api/post", PostRoute);
 
-app.listen(PORT)
+httpServer.listen(PORT)
