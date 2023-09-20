@@ -14,12 +14,12 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: FRONTEND_URL,
+        origin: process.env.FRONTEND_URL,
         credentials: true,
     }
 });
 
-app.use(cors({ credentials: true, origin: FRONTEND_URL }));
+app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL }));
 app.use(express.json());
 app.use(cookieParser());
 
