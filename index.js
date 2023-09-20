@@ -14,20 +14,20 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: FRONTEND_URL,
         credentials: true,
     }
 });
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: FRONTEND_URL }));
 app.use(express.json());
 app.use(cookieParser());
 
 mongoose.connect(process.env.MONGO_URL);
 
 io.on('connection', (socket) => {
-    socket.on("send_like", (val)=>{
-        socket.broadcast.emit("receive_like", {data: "hghghg"})
+    socket.on("send_like", (val) => {
+        socket.broadcast.emit("receive_like", { data: "hghghg" })
     });
 });
 
