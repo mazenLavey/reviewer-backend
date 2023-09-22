@@ -12,12 +12,12 @@ import dotenv from 'dotenv';
 const PORT = 4000;
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
-    cors: {
-        origin: process.env.FRONTEND_URL,
-        credentials: true,
-    }
-});
+// const io = new Server(httpServer, {
+//     cors: {
+//         origin: process.env.FRONTEND_URL,
+//         credentials: true,
+//     }
+// });
 
 app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL }));
 app.use(express.json());
@@ -25,11 +25,11 @@ app.use(cookieParser());
 
 mongoose.connect(process.env.MONGO_URL);
 
-io.on('connection', (socket) => {
-    socket.on("send_like", (val) => {
-        socket.broadcast.emit("receive_like", { data: "hghghg" })
-    });
-});
+// io.on('connection', (socket) => {
+//     socket.on("send_like", (val) => {
+//         socket.broadcast.emit("receive_like", { data: "test" })
+//     });
+// });
 
 app.use("/api/register", registerRoute);
 app.use("/api/login", loginRoute);
