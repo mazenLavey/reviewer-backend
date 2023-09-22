@@ -11,7 +11,7 @@ import dotenv from 'dotenv';
 
 const PORT = 4000;
 const app = express();
-const httpServer = createServer(app);
+// const httpServer = createServer(app);
 // const io = new Server(httpServer, {
 //     cors: {
 //         origin: process.env.FRONTEND_URL,
@@ -35,4 +35,4 @@ app.use("/api/register", registerRoute);
 app.use("/api/login", loginRoute);
 app.use("/api/post", PostRoute);
 
-httpServer.listen(PORT)
+app.listen(PORT)
