@@ -7,7 +7,6 @@ import PostRoute from './routes/Post';
 import cookieParser from 'cookie-parser';
 import { Server } from "socket.io";
 import { createServer } from 'http';
-import dotenv from 'dotenv';
 
 const PORT = 4000;
 const app = express();
