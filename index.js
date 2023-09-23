@@ -8,8 +8,8 @@ import cookieParser from 'cookie-parser';
 import { Server } from "socket.io";
 import { createServer } from 'http';
 
-const PORT = 4000;
 const app = express();
+const PORT = process.env.PORT || 4000; 
 // const httpServer = createServer(app);
 // const io = new Server(httpServer, {
 //     cors: {
